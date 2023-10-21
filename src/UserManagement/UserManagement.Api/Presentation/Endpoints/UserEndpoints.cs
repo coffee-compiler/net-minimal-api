@@ -32,8 +32,8 @@ internal static class UserEndpoints
 
     private static async Task<IResult> CreateUser(
         [FromBody] CreateUserDto user,
-        CancellationToken cancellationToken,
-        IUserService userService)
+        IUserService userService,
+        CancellationToken cancellationToken)
     {
         var createdUser =
             await userService.CreateAsync(user, cancellationToken);
@@ -51,8 +51,8 @@ internal static class UserEndpoints
 
     private static async Task<IResult> DeleteUser(
         [FromRoute] Guid id,
-        CancellationToken cancellationToken,
-        IUserService userService)
+        IUserService userService,
+        CancellationToken cancellationToken)
     {
         await userService.DeleteAsync(id, cancellationToken);
         return Results.Ok();
@@ -60,8 +60,8 @@ internal static class UserEndpoints
 
     private static async Task<IResult> GetUser(
         [FromRoute] Guid id,
-        CancellationToken cancellationToken,
-        IUserService userService)
+        IUserService userService,
+        CancellationToken cancellationToken)
     {
         var user =
             await userService.GetAsync(id, cancellationToken);
@@ -73,8 +73,8 @@ internal static class UserEndpoints
     }
 
     private static async Task<IResult> GetAllUsers(
-        CancellationToken cancellationToken,
-        IUserService userService)
+        IUserService userService,
+        CancellationToken cancellationToken)
     {
         var users =
             await userService.GetAllAsync(cancellationToken);
