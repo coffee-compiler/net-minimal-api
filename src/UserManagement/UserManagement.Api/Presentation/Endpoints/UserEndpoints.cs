@@ -12,7 +12,7 @@ internal static class UserEndpoints
     public static void Map(WebApplication app)
     {
         app.MapPost(UserRoutes.Create, CreateUser)
-            .Produces<UserDto?>(StatusCodes.Status201Created)
+            .Produces<UserDto>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .WithTags(BaseTag);
 
@@ -21,7 +21,7 @@ internal static class UserEndpoints
             .WithTags(BaseTag);
 
         app.MapGet(UserRoutes.Get, GetUser)
-            .Produces<UserDto?>(StatusCodes.Status200OK)
+            .Produces<UserDto>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .WithTags(BaseTag);
 
