@@ -30,7 +30,7 @@ internal static class UserEndpoints
             .WithTags(BaseTag);
     }
 
-    public static async Task<IResult> CreateUser(
+    private static async Task<IResult> CreateUser(
         [FromBody] CreateUserDto user,
         CancellationToken cancellationToken,
         IUserService userService)
@@ -49,7 +49,7 @@ internal static class UserEndpoints
                     createdUser);
     }
 
-    public static async Task<IResult> DeleteUser(
+    private static async Task<IResult> DeleteUser(
         [FromRoute] Guid id,
         CancellationToken cancellationToken,
         IUserService userService)
@@ -58,7 +58,7 @@ internal static class UserEndpoints
         return Results.Ok();
     }
 
-    public static async Task<IResult> GetUser(
+    private static async Task<IResult> GetUser(
         [FromRoute] Guid id,
         CancellationToken cancellationToken,
         IUserService userService)
@@ -72,7 +72,7 @@ internal static class UserEndpoints
                 : Results.Ok(user);
     }
 
-    public static async Task<IResult> GetAllUsers(
+    private static async Task<IResult> GetAllUsers(
         CancellationToken cancellationToken,
         IUserService userService)
     {
