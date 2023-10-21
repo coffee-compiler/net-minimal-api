@@ -13,17 +13,19 @@ internal static class UserEndpoints
     {
         app.MapPost(UserRoutes.Create, CreateUser)
             .Produces<UserDto?>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
             .WithTags(BaseTag);
 
         app.MapDelete(UserRoutes.Delete, DeleteUser)
             .Produces(StatusCodes.Status200OK)
             .WithTags(BaseTag);
 
-        app.MapGet(UserRoutes.Get,GetUser)
+        app.MapGet(UserRoutes.Get, GetUser)
             .Produces<UserDto?>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
             .WithTags(BaseTag);
 
-        app.MapGet(UserRoutes.GetAll,GetAllUsers)
+        app.MapGet(UserRoutes.GetAll, GetAllUsers)
             .Produces<IEnumerable<UserDto?>>()
             .WithTags(BaseTag);
     }
@@ -33,14 +35,18 @@ internal static class UserEndpoints
         CancellationToken cancellationToken,
         IUserService userService)
     {
-        var createdUser = await userService.CreateAsync(user, cancellationToken);
+        var createdUser =
+            await userService.CreateAsync(user, cancellationToken);
 
-        return Results.Created(
-            UserRoutes.Get
-                .Replace(
-                    "{id:guid}",
-                    createdUser?.Id.ToString("D")),
-            createdUser);
+        return
+            createdUser is null
+                ? Results.BadRequest("Failed to create user.")
+                : Results.Created(
+                    UserRoutes.Get
+                        .Replace(
+                            "{id:guid}",
+                            createdUser.Id.ToString("D")),
+                    createdUser);
     }
 
     public static async Task<IResult> DeleteUser(
@@ -57,16 +63,21 @@ internal static class UserEndpoints
         CancellationToken cancellationToken,
         IUserService userService)
     {
-        var user = await userService.GetAsync(id, cancellationToken);
+        var user =
+            await userService.GetAsync(id, cancellationToken);
 
-        return Results.Ok(user);
+        return
+            user is null
+                ? Results.NotFound()
+                : Results.Ok(user);
     }
 
     public static async Task<IResult> GetAllUsers(
         CancellationToken cancellationToken,
         IUserService userService)
     {
-        var users = await userService.GetAllAsync(cancellationToken);
+        var users =
+            await userService.GetAllAsync(cancellationToken);
 
         return Results.Ok(users);
     }
